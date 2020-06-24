@@ -14,13 +14,13 @@ folder = r'F:\Gis\LC08_L1TP_'+X+'_01_T1'
 
 data = np.load( folder +r'\numpy_frame\clip_'+X+'.npy')
 
-b_1s=np.load(folder + r'\numpy\Landsat32_'+X+'_B1.npy')
-b_2s=np.load(folder + r'\numpy\Landsat32_'+X+'_B2.npy')
-b_3s=np.load(folder + r'\numpy\Landsat32_'+X+'_B3.npy')
-b_4s=np.load(folder + r'\numpy\Landsat32_'+X+'_B4.npy')
-b_5s=np.load(folder + r'\numpy\Landsat32_'+X+'_B5.npy')
-b_6s=np.load(folder + r'\numpy\Landsat32_'+X+'_B6.npy')
-b_7s=np.load(folder + r'\numpy\Landsat32_'+X+'_B7.npy')
+b_1s=np.load(folder + r'\numpy\Landsat_'+X+'_B1.npy')
+b_2s=np.load(folder + r'\numpy\Landsat_'+X+'_B2.npy')
+b_3s=np.load(folder + r'\numpy\Landsat_'+X+'_B3.npy')
+b_4s=np.load(folder + r'\numpy\Landsat_'+X+'_B4.npy')
+b_5s=np.load(folder + r'\numpy\Landsat_'+X+'_B5.npy')
+b_6s=np.load(folder + r'\numpy\Landsat_'+X+'_B6.npy')
+b_7s=np.load(folder + r'\numpy\Landsat_'+X+'_B7.npy')
 
 class Layer(object):
     """One layer of HIS image"""
