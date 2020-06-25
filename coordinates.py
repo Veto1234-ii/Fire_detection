@@ -2,11 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tifffile
 
-X = '176022_20181020_20181031'
-folder = r'F:\Gis\LC08_L1TP_'+X+'_01_T1\Image\LC08_L1TP_'+X+'_01_T1_MTL.txt'
-result = np.load(r'F:\Gis\LC08_L1TP_176022_20181020_20181031_01_T1\fire_mask\fire_mask_'+X+'.npy')
+X = '172022_20180922_20180928'
+folder = r'F:\Gis\LC08_L1TP_'+X+'_01_T1'
+folder2 = r'\Image\LC08_L1TP_'+X+'_01_T1_MTL.txt'
+
+result = np.load(folder + r'\fire_mask\fire_mask_'+X+'.npy')
+b_1s = np.load(folder + r'\numpy\Landsat_'+X+'_B1.npy')
+
 data={}
-with open(folder) as file:
+with open(folder2) as file:
     for line in file:
         key, *value = line.split()
         data[key] = value
@@ -20,27 +24,55 @@ LL_LON = float(data['CORNER_LL_LON_PRODUCT'][1])
 LR_LAT = float(data['CORNER_LR_LAT_PRODUCT'][1])
 LR_LON = float(data['CORNER_LR_LON_PRODUCT'][1])
 
-def Coordinates(height,width,i,j,UL_LAT,LR_LAT,UR_LON,LL_LON):
+def index_corners(b):
+    shape = b.shape
+    mask = np.zeros(shape)
+    
+    np.putmask(mask,b!=b[0][0],1)
+    
+    ind_lines = []
+    for i in range(shape[0]):
+       if np.sum(mask[i,:])<=5 and np.sum(mask[i,:])!=0:
+           ind_lines.append(i)
+    
+    ind_columns = []   
+    for j in range(shape[1]):
+       if np.sum(mask[:,j])<=5 and np.sum(mask[:,j])!=0:
+           ind_columns.append(j)
+           
+    Max_ind_line = max(ind_lines)  
+    Min_ind_line = min(ind_lines) 
+    Max_ind_col = max(ind_columns)
+    Min_ind_col = min(ind_columns)
+    
+    return  (Max_ind_line, Min_ind_line, Max_ind_col, Min_ind_col)
+    
+def Coordinates(i, j, UL_LAT, LR_LAT, UR_LON, LL_LON, Max_ind_line, Min_ind_line, Max_ind_col, Min_ind_col):
+  
+    
+    offsetX = Min_ind_col 
+    offsetY = Min_ind_line
+    
+    
+    Max_Lat = max(UL_LAT,UR_LAT,LL_LAT,LR_LAT)
+    
+    Min_lat = min(UL_LAT,UR_LAT,LL_LAT,LR_LAT)
+    
+    Max_lon = max(UL_LON,UR_LON,LL_LON,LR_LON)
+    
+    Min_lon = min(UL_LON,UR_LON,LL_LON,LR_LON)
+    
+    p_lat = abs((Max_Lat - Min_lat)/(Max_ind_line - offsetY))
+    print(p_lat)
+    p_lon = abs((Max_lon - Min_lon)/(Max_ind_col - offsetX))
+    print(p_lon)
+    
+    res_lat1 = Max_Lat - (i - offsetY) * p_lat
 
-    ind_UL = (11,1664)
-    ind_LR = (7939, 6180)
-    ind_LL = (6304, 21)
-    ind_UR = (1609, 7841)
-    
-    offsetX = ind_LL[1] 
-    offsetY = ind_UL[0]
-    
-    width = ind_LR[1] - offsetX
-    height = ind_LR[0] - offsetY
-    
-    p_lat = abs((UL_LAT - LR_LAT)/(ind_LR[0] - ind_UL[0]))
-    p_lon = abs((UR_LON - LL_LON)/(ind_UR[1] - ind_LL[1]))
-    # res_lat = LR_LAT + (ind_LR[0] - i) *p_lat
-    res_lat1 = UL_LAT - (i - offsetY) * p_lat
-
-    res_lon = LL_LON + (j - offsetY) * p_lon
+    res_lon = Min_lon + (j - offsetX) * p_lon
     
     return (res_lat1,res_lon)
+
 
 shape = result.shape
 
@@ -50,6 +82,11 @@ width = shape[1]
 lonarr = []
 latarr = []
 
+Corners = index_corners(b_1s)
+Max_ind_line = Corners[0]
+Min_ind_line = Corners[1]
+Max_ind_col = Corners[2]
+Min_ind_col = Corners[3]
 
 
 for i in range(height):
