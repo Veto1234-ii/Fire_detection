@@ -1,28 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import tifffile
-
-X = '172022_20180922_20180928'
-folder = r'F:\Gis\LC08_L1TP_'+X+'_01_T1'
-folder2 = r'\Image\LC08_L1TP_'+X+'_01_T1_MTL.txt'
-
-result = np.load(folder + r'\fire_mask\fire_mask_'+X+'.npy')
-b_1s = np.load(folder + r'\numpy\Landsat_'+X+'_B1.npy')
-
-data={}
-with open(folder2) as file:
-    for line in file:
-        key, *value = line.split()
-        data[key] = value
-
-UL_LAT = float(data['CORNER_UL_LAT_PRODUCT'][1])
-UL_LON = float(data['CORNER_UL_LON_PRODUCT'][1])
-UR_LAT = float(data['CORNER_UR_LAT_PRODUCT'][1])
-UR_LON = float(data['CORNER_UR_LON_PRODUCT'][1])
-LL_LAT = float(data['CORNER_LL_LAT_PRODUCT'][1])
-LL_LON = float(data['CORNER_LL_LON_PRODUCT'][1])
-LR_LAT = float(data['CORNER_LR_LAT_PRODUCT'][1])
-LR_LON = float(data['CORNER_LR_LON_PRODUCT'][1])
 
 def index_corners(b):
     shape = b.shape
@@ -47,20 +23,11 @@ def index_corners(b):
 
     return  (Max_ind_line, Min_ind_line, Max_ind_col, Min_ind_col)
 
-def Coordinates(i, j, UL_LAT, LR_LAT, UR_LON, LL_LON, Max_ind_line, Min_ind_line, Max_ind_col, Min_ind_col):
+def Coordinates(i, j, Min_lat, Max_Lat, Min_lon, Max_lon, Max_ind_line, Min_ind_line, Max_ind_col, Min_ind_col):
 
 
     offsetX = Min_ind_col
     offsetY = Min_ind_line
-
-
-    Max_Lat = max(UL_LAT,UR_LAT,LL_LAT,LR_LAT)
-
-    Min_lat = min(UL_LAT,UR_LAT,LL_LAT,LR_LAT)
-
-    Max_lon = max(UL_LON,UR_LON,LL_LON,LR_LON)
-
-    Min_lon = min(UL_LON,UR_LON,LL_LON,LR_LON)
 
     p_lat = abs((Max_Lat - Min_lat)/(Max_ind_line - offsetY))
     print(p_lat)
@@ -73,7 +40,9 @@ def Coordinates(i, j, UL_LAT, LR_LAT, UR_LON, LL_LON, Max_ind_line, Min_ind_line
 
     return (res_lat1,res_lon)
 
-def FromMaskToCoords(mtl, firemask):
+def FromMaskToCoords(filepath, np_filepath, info, firemask):
+    b1 = np.load(np_filepath + r'Landsat_' + info + '_B1.npy')
+    mtl  = filepath + '_01_T1_MTL.txt'
     data={}
     with open(mtl) as file:
         for line in file:
@@ -88,6 +57,17 @@ def FromMaskToCoords(mtl, firemask):
     LL_LON = float(data['CORNER_LL_LON_PRODUCT'][1])
     LR_LAT = float(data['CORNER_LR_LAT_PRODUCT'][1])
     LR_LON = float(data['CORNER_LR_LON_PRODUCT'][1])
+    
+    Corners = index_corners(b1)
+    Max_ind_line = Corners[0]
+    Min_ind_line = Corners[1]
+    Max_ind_col =  Corners[2]
+    Min_ind_col =  Corners[3]
+    
+    Max_Lat = max(UL_LAT,UR_LAT,LL_LAT,LR_LAT)
+    Min_lat = min(UL_LAT,UR_LAT,LL_LAT,LR_LAT)
+    Max_lon = max(UL_LON,UR_LON,LL_LON,LR_LON)
+    Min_lon = min(UL_LON,UR_LON,LL_LON,LR_LON)
 
     result = np.load(firemask)
     shape = result.shape
@@ -101,7 +81,7 @@ def FromMaskToCoords(mtl, firemask):
     for i in range(height):
             for j in range(width):
                 if result[i][j]!=0:
-                    lon_lat = Coordinates(height,width,i,j,UL_LAT,LR_LAT,UR_LON,LL_LON)
+                    lon_lat = Coordinates(i,j,Min_lat, Max_Lat, Min_lon, Max_lon, Max_ind_line, Min_ind_line, Max_ind_col, Min_ind_col)
                     latarr.append(lon_lat[0])
                     lonarr.append(lon_lat[1])
 
@@ -110,42 +90,6 @@ def FromMaskToCoords(mtl, firemask):
     latarr=np.array(latarr)
 
     print(len(lonarr))
-    np.save('lonarr_'+X,lonarr)
-    np.save('latarr_'+X,latarr)
+    np.save('lonarr_'+info,lonarr)
+    np.save('latarr_'+info,latarr)
     print('coords done')
-
-
-
-
-
-Corners = index_corners(b_1s)
-Max_ind_line = Corners[0]
-Min_ind_line = Corners[1]
-Max_ind_col = Corners[2]
-Min_ind_col = Corners[3]
-
-
-
-# # for i in range(len(latarr)):
-# #     file.write(str(latarr[i]) + ', ')
-# # file.write('\n')
-
-# # for i in range(len(lonarr)):
-# #     file.write(str(lonarr[i]) + ', ')
-# # file.write('\n')
-
-# for i in range(len(lonarr)):
-#     file.write( str(latarr[i]) + ', '+ str(lonarr[i]) + '\n')
-
-# file.close()
-# print('well done')
-
-
-# UL_LAT = float(data['CORNER_UL_LAT_PRODUCT'][1])
-# UL_LON = float(data['CORNER_UL_LON_PRODUCT'][1])
-# UR_LAT = float(data['CORNER_UR_LAT_PRODUCT'][1])
-# UR_LON = float(data['CORNER_UR_LON_PRODUCT'][1])
-# LL_LAT = float(data['CORNER_LL_LAT_PRODUCT'][1])
-# LL_LON = float(data['CORNER_LL_LON_PRODUCT'][1])
-# LR_LAT = float(data['CORNER_LR_LAT_PRODUCT'][1])
-# LR_LON = float(data['CORNER_LR_LON_PRODUCT'][1])

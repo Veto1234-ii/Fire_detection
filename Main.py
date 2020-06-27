@@ -12,14 +12,14 @@ from coordinates import FromMaskToCoords
 X = '135018_20180615_20180703'
 filepath = r'J:\GIS_DATA\Fire\2018\LC08_L1TP_'+X+'_01_T1\LC08_L1TP_' + X
 
-for i in range(1,8):
-    DNtoReflectance(filepath, X, i, "result/")
+# for i in range(1,8):
+#     DNtoReflectance(filepath, X, i, "result/")
     
-calculateBorders(filepath, "result/", X, "result/")
+calculateBorders(filepath, "result/", X, "result/", 40)
 
 detectFire("result/", X)
 
 mtl = filepath + '_01_T1_MTL.txt'
 firemask = r'result\fire_mask_'+X+'.npy'
 
-FromMaskToCoords(mtl, firemask)
+FromMaskToCoords(filepath, "result/", X, firemask)
