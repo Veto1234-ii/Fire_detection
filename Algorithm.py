@@ -7,11 +7,9 @@ Created on Tue Jun  2 19:33:14 2020
 import gc
 import numpy as np
 import matplotlib.pyplot as plt
-import Layer
+from Layer import Layer
 
 def detectFire(np_folder, info):
-
-    data = np.load(np_folder +r'clip_'+info+'.npy')
 
     b_1s=np.load(np_folder + r'Landsat_'+info+'_B1.npy')
     b_2s=np.load(np_folder + r'Landsat_'+info+'_B2.npy')
@@ -22,6 +20,7 @@ def detectFire(np_folder, info):
     b_7s=np.load(np_folder + r'Landsat_'+info+'_B7.npy')
 
     shape=b_1s.shape
+    data = np.full(shape, True, dtype=bool)
 
     l1 = Layer(b_1s)
     l2 = Layer(b_2s)
@@ -141,3 +140,6 @@ def detectFire(np_folder, info):
     np.save('fire_mask_'+info,result)
     print(np.max(result))
     print(np.sum(result))
+    mask = np.zeros(shape, dtype = np.uint8)
+    np.putmask(mask,result!=0, 1)
+    print(np.sum(mask),'Points ')
