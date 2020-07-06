@@ -4,7 +4,7 @@ Created on Thu Jun 25 08:32:26 2020
 
 @author: Alexandra
 """
-
+import numpe as np
 class Layer(object):
     """One layer of HIS image"""
     
