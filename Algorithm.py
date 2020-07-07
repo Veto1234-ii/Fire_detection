@@ -137,7 +137,7 @@ def detectFire(np_folder, info):
     #===============================================================================
     plt.title("result")
     plt.imshow(result,cmap='gray')
-    np.save('fire_mask_'+info,result)
+    np.save(np_folder + 'fire_mask_'+info,result)
     print(np.max(result))
     print(np.sum(result))
     mask = np.zeros(shape, dtype = np.uint8)
