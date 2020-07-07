@@ -9,35 +9,37 @@ import numpy as np
 import math
 import gc
 
-def histogram_calculation(np_folder, n_band, info,N,Count):
+def threshold_selection(np_folder, n_band, info, N, Count):
     T = np.load(np_folder + r'Temperature_Band_' + str(n_band) +'_'+info + '.npy')
-    shape = T.shape
-    minval = np.min(T)
-    maxval = np.max(T)
-    dist = (maxval - minval)/(N-1)
-    print(dist)
+    hist = histogram_calculation(T, N)
+    np.save(np_folder+'Histogram_'+info, hist)    
+    print('histogram done')
+    
+    Number = 0
+    
+    for i in range(hist.shape[0]-1,-1,-1):
+        Number += hist[i]
+        if Number >= Count:
+            break
+    
+    threshold = minval + i*step
+    print(threshold)
+    return threshold
+
+def histogram_calculation(snapshot, N):
+    shape = snapshot.shape
+    minval = np.min(snapshot)
+    maxval = np.max(snapshot)
+    step = (maxval - minval)/(N-1)
+    print(step)
     hist = np.zeros(N, dtype = np.uint32)
     
     for i in range(shape[0]):
         for j in range(shape[1]):
-            t = T[i][j]
-            idx = int(round((t - minval)/dist))
+            t = snapshot[i][j]
+            idx = int(round((t - minval)/step))
             hist[idx]+=1
-            
-    np.save(np_folder+'Histogram_'+info, hist)    
-    print('histogram done')
-    Number = 0
-    
-    for i in range(hist.shape[0]-1,-1,-1):
-        Number+=hist[i]
-        if Number > Count:
-            break
-    
-    threshold = minval + i*dist
-    print(threshold)
-    
-    return threshold
-
+    return hist
 
 
 

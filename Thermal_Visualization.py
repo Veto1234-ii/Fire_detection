@@ -16,8 +16,7 @@ def Visualization(np_folder,info,n_band):
     
     fig, ax = plt.subplots()
     
-    ax.scatter(x, y,
-                c = 'red') 
+    ax.scatter(x, y, c = 'red') 
       
     ax.set_facecolor('white')     #  цвет области Axes
     

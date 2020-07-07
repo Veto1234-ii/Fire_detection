@@ -6,27 +6,29 @@ Created on Sun Jun 28 17:59:42 2020
 """
 
 from GeoTiff_to_Temperature import DNtoTCelsium
-from histogram import histogram_calculation
+from histogram import threshold_selection
 from Threshold_mask_thermal import Thermal_mask
 from Thermal_coordinates import FromMaskToCoords
 from Thermal_Visualization import Visualization
-X = '188034_20140623_20170421'
 
+X = '119041_20140807_20170420'
+filepath = r'E:\Gis\LC08_L1TP_'+X+'_01_T1\LC08_L1TP_'+X
 
-filepath = r'F:\Gis\LC08_L1TP_'+X+'_01_T1\Image\LC08_L1TP_'+X
-
-
-DNtoTCelsium(filepath, X, 10, "result/")
+# X = '188034_20140623_20170421'
+# filepath = r'F:\Gis\LC08_L1TP_'+X+'_01_T1\Image\LC08_L1TP_'+X
 
 Count = 176
 N = 500
+band = 10
 
-threshold = histogram_calculation("result/", 10, X, N, Count)
+DNtoTCelsium(filepath, X, band, "result/")
 
-Thermal_mask(threshold, "result/", 10, X)
+threshold = threshold_selection("result/", band, X, N, Count)
 
-Thermalmask = r'result/Thermal_mask_'+X+'.npy'
+Thermal_mask(threshold, "result/", band, X)
 
-FromMaskToCoords(filepath, "result/", X, 10, Thermalmask)
-Visualization("result/",X,10)
+thermal_mask_file = r'result/Thermal_mask_'+X+'.npy'
+
+FromMaskToCoords(filepath, "result/", X, band, thermal_mask_file)
+Visualization("result/", X, band)
 
