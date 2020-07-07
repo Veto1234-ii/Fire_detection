@@ -6,7 +6,7 @@ Created on Mon Jul  6 17:14:07 2020
 """
 import numpy as np
 
-def Thermal_mask(threshold, np_folder, n_band, info)
+def Thermal_mask(threshold, np_folder, n_band, info):
 
     T = np.load(np_folder + r'Temperature_Band_' + str(n_band) +'_'+info + '.npy')
     shape = T.shape
