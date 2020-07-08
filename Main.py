@@ -9,13 +9,17 @@ from Mask_true_false_borders import calculateBorders
 from Algorithm import detectFire
 from coordinates import FromMaskToCoords
 
-X = '135018_20180615_20180703'
-filepath = r'J:\GIS_DATA\Fire\2018\LC08_L1TP_'+X+'_01_T1\LC08_L1TP_' + X
+# X = '135018_20180615_20180703'
+# filepath = r'J:\GIS_DATA\Fire\2018\LC08_L1TP_'+X+'_01_T1\LC08_L1TP_' + X
+
+X = '119041_20140807_20170420'
+filepath = r'E:\Gis\LC08_L1TP_'+X+'_01_T1\LC08_L1TP_'+X
 
 # for i in range(1,8):
 #     DNtoReflectance(filepath, X, i, "result/")
-    
-calculateBorders(filepath, "result/", X, "result/", 40)
+ 
+# вырубили   
+#calculateBorders(filepath, "result/", X, "result/", 40)
 
 detectFire("result/", X)
 
