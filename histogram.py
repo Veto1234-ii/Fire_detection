@@ -13,7 +13,7 @@ def threshold_selection(np_folder, n_band, info, N, Count):
     T = np.load(np_folder + r'Temperature_Band_' + str(n_band) +'_'+info + '.npy')
     # res = histogram_calculation(T, N)
     res = histogram_calculation_numpy(T, N)
-    hist = np.array(res[0][0])
+    hist = res[0][0]
     step = res[1]
     minval = res[2]
     
