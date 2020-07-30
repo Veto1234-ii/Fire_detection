@@ -49,7 +49,7 @@ def comparison_comparison(d2, Names_images):
     return d3    
 
 Names_images = ['20140623', '20140522', '20140319', '20140215', '20131229']
-E_diff = 0.009164408392108444
+E_diff = 0.009164408392108444# minimum distane 20140623 and 20131229
 d2 = Analysis(np_folder, Names_images, E_diff)
 Print_Dict(d2)
 print()

@@ -28,6 +28,5 @@ res = compare_coordinates_lists(arr1, arr2, E_diff)
 print(res)
 print(len(res))
 
-# print(res)
 # Visualization_arr(res, snapshot1+'_'+snapshot2, 'green')
 # file.close()

@@ -38,7 +38,6 @@ def Visualization_arr(arr, info, color):
     x = [i[1] for i in arr]
     
     
-    
     fig, ax = plt.subplots()
     
     ax.scatter(x, y,

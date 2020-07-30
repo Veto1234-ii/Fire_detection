@@ -111,7 +111,6 @@ def Сalculation_E_diff_corners(filepath, np_filepath, info):
     E_diff = (p_lat**2 + p_lon**2)**0.5
     return  E_diff
 
-
 def Сalculation_E_diff_compare_coordinates(arr1, arr2):
     
     arrays = Minimum_Len_array(arr1, arr2)
