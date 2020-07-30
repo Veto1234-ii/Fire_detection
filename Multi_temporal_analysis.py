@@ -6,13 +6,13 @@ from comparison import To_radians
 from comparison import Lists_coordinates
 
 
-np_folder = r'result/points_match/'
+np_folder = r'result/'
 
 
 def Print_Dict(d):
     for key,value in d.items():
-        print(key,value[2],' days')
-        # print(key,value[1],' points')
+        # print(key,value[2],' days')
+        print(key,value[1],' points')
         
 def time(a, b):
     date1 = datetime.date(int(a[0:4]),int(a[4:6]),int(a[6:]))
@@ -20,7 +20,7 @@ def time(a, b):
     days = abs(int(str(date1-date2).split()[0]))
     return days
 
-def Analysis(np_folder, Names_images): 
+def Analysis(np_folder, Names_images, E_diff): 
     
     d2 ={}
     for i in range(len(Names_images)-1):
@@ -29,7 +29,7 @@ def Analysis(np_folder, Names_images):
         for j in range(i+1, len(Names_images)):
             
             arr2 = Lists_coordinates(np_folder, Names_images[j])
-            res = compare_coordinates_lists(arr1, arr2)
+            res = compare_coordinates_lists(arr1, arr2, E_diff)
             Time = time(Names_images[i], Names_images[j])
             if len(res)!=0:
                 d2[(Names_images[i],Names_images[j])] = (res, len(res), Time)
@@ -49,8 +49,8 @@ def comparison_comparison(d2, Names_images):
     return d3    
 
 Names_images = ['20140623', '20140522', '20140319', '20140215', '20131229']
-
-d2 = Analysis(np_folder, Names_images)
+E_diff = 0.009164408392108444
+d2 = Analysis(np_folder, Names_images, E_diff)
 Print_Dict(d2)
 print()
 print()
