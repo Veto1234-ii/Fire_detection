@@ -1,8 +1,14 @@
 from comparison import *
 
-X_GT = '188034_20140623_20170421'
+X_GT = '188034_20140215_20170425'
 X_test = '188034_20131229_20170427'
+k = 2 # нужное кол-во точек
 
+# 188034_20140623_20170421
+# 188034_20140522_20180527
+# 188034_20140215_20170425
+# 188034_20140319_20170425
+# 188034_20131229_20170427
 filepath = r'F:\Gis\188034\LC08_L1TP_'+X_GT+'_01_T1\Image\LC08_L1TP_'+X_GT
 np_filepath = r'result/'
 
@@ -22,7 +28,7 @@ print(len(arr2), 'Points '+snapshot2)
 # E_lon = E[1]
 
 # res1 = compare_coordinates_lists_1(arr1, arr2)
-E_diff = Minimum_distance(arr1, arr2)
+E_diff = Minimum_distance(arr1, arr2, k)
 print(E_diff)
 res = compare_coordinates_lists(arr1, arr2, E_diff)
 print(res)

@@ -39,7 +39,7 @@ def Lists_coordinates(np_folder, info):
     
     return arr
 
-def Minimum_distance(arr1, arr2):
+def Minimum_distance(arr1, arr2, k):
     
     arrays = Minimum_Len_array(arr1, arr2)
     GT_coord = arrays[0]
@@ -59,8 +59,8 @@ def Minimum_distance(arr1, arr2):
             
         arr_minimum.append(min(arr))
         
-
-    return min(arr_minimum)
+    arr_minimum = sorted(arr_minimum)
+    return arr_minimum[k-1]
 
 def Сalculation_E_diff_corners(filepath, np_filepath, info):
     
