@@ -7,9 +7,30 @@ Created on Mon Jul 20 14:08:51 2020
 import math
 import numpy as np
 import gc
+import datetime
 import matplotlib.pyplot as plt
 from Visualization_result_matplot import Visualization_nparray_coordinates, Visualization_arr
 from utilities import getMTL
+
+def time(a, b):
+    date1 = datetime.date(int(a[0:4]),int(a[4:6]),int(a[6:]))
+    date2 = datetime.date(int(b[0:4]),int(b[4:6]),int(b[6:]))
+    days = abs(int(str(date1-date2).split()[0]))
+    return days
+
+def length(a1,b1,a2,b2):
+    
+    a1_r = (a1*math.pi)/180
+    a2_r = (a2*math.pi)/180
+    b1_r = (b1*math.pi)/180
+    b2_r = (b2*math.pi)/180
+    r = 6372795
+    
+    l_a = abs((a2_r - a1_r))/2
+    l_b = abs((b2_r - b1_r))/2
+    x = 2*math.asin( (math.sin(l_a)**2 + math.cos(a1_r)*math.cos(a2_r) * math.sin(l_b)**2 ) **0.5 )
+    length = (x*r) # в м
+    return length
 
 def Minimum_Len_array(arr1, arr2):
     
@@ -39,28 +60,63 @@ def Lists_coordinates(np_folder, info):
     
     return arr
 
-def Minimum_distance(arr1, arr2, k):
+def Minimum_distance(GT_coord, Test_sample_coord, k):
     
-    arrays = Minimum_Len_array(arr1, arr2)
-    GT_coord = arrays[0]
-    Test_sample_coord = arrays[1]
-    
-    arr_minimum = []     
+    arr_minimum_d = []    
+    arr_minimum_m = []
 
     for i in range(len(GT_coord)):
-        arr = []
+        arr_degrees = []
+        arr_m = []
         for j in range(len(Test_sample_coord)):
             
             diff_lat = abs(GT_coord[i][0] - Test_sample_coord[j][0])
             diff_lon = abs(GT_coord[i][1] - Test_sample_coord[j][1])
             
-            diff = (diff_lat**2 + diff_lon**2)**0.5
-            arr.append(diff)
+            diff_degrees = (diff_lat**2 + diff_lon**2)**0.5
+            diff_m = length(GT_coord[i][0], GT_coord[i][1], Test_sample_coord[j][0], Test_sample_coord[j][1])
             
-        arr_minimum.append(min(arr))
+            arr_degrees.append(diff_degrees)
+            arr_m.append(diff_m)
+            
+        arr_minimum_d.append(min(arr_degrees))
+        arr_minimum_m.append(min(arr_m))
         
-    arr_minimum = sorted(arr_minimum)
-    return arr_minimum[k-1]
+        
+    arr_minimum_d = sorted(arr_minimum_d)
+    arr_minimum_m = sorted(arr_minimum_m)
+
+    return (arr_minimum_d[k-1], arr_minimum_m[k-1])
+
+    
+def Dist_GT_test(GT_coord, Test_sample_coord):
+    
+    # GT_num   = [i for i in range(1, len(GT_coord) + 1)]
+    # Test_num = [i for i in range(1, len(Test_sample_coord) + 1)]
+    
+
+    dist_points = []
+    
+    for i in range(len(Test_sample_coord)):
+        arr_degrees = []
+        for j in range(len(GT_coord)):
+            
+            diff_lat = abs(GT_coord[j][0] - Test_sample_coord[i][0])
+            diff_lon = abs(GT_coord[j][1] - Test_sample_coord[i][1])
+            
+            diff_degrees = (diff_lat**2 + diff_lon**2)**0.5
+            
+            arr_degrees.append((diff_degrees, j+1))
+            
+        arr_degrees_sort = sorted(arr_degrees, key = lambda x: x[0])
+        
+        Min_dist_d = arr_degrees_sort[0][0] 
+        ind_GT     = arr_degrees_sort[0][1]
+        ind_test   = i+1 
+        
+        dist_points.append((Min_dist_d, ind_test, ind_GT))
+    
+    return dist_points
 
 def Сalculation_E_diff_corners(filepath, np_filepath, info):
     
@@ -111,12 +167,8 @@ def Сalculation_E_diff_corners(filepath, np_filepath, info):
     E_diff = (p_lat**2 + p_lon**2)**0.5
     return  E_diff
 
-def Сalculation_E_diff_compare_coordinates(arr1, arr2):
+def Сalculation_E_diff_compare_coordinates(GT_coord, Test_sample_coord):
     
-    arrays = Minimum_Len_array(arr1, arr2)
-    GT_coord = arrays[0]
-    Test_sample_coord = arrays[1]
-        
     E_lat = 30/111134.86
     Gr3 = []
     for i in range(len(GT_coord)):
@@ -140,11 +192,7 @@ def Сalculation_E_diff_compare_coordinates(arr1, arr2):
             
     return Gr3
 
-def compare_coordinates_lists(arr1, arr2, E_diff):
-    
-    arrays = Minimum_Len_array(arr1, arr2)
-    GT_coord = arrays[0]
-    Test_sample_coord = arrays[1]
+def compare_coordinates_lists(GT_coord, Test_sample_coord, E_diff):
     
     Gr3 = []    
     for i in range(len(GT_coord)):
