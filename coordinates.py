@@ -86,6 +86,6 @@ def FromMaskToCoords(filepath, np_filepath, info, firemask):
     latarr=np.array(latarr)
 
     print(len(lonarr))
-    np.save('lonarr_'+info,lonarr)
-    np.save('latarr_'+info,latarr)
+    np.save(np_filepath + 'lonarr_'+info,lonarr)
+    np.save(np_filepath + 'latarr_'+info,latarr)
     print('coords done')

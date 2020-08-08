@@ -9,7 +9,7 @@ import numpy as np
 import gc
 import datetime
 import matplotlib.pyplot as plt
-from Visualization_result_matplot import Visualization_nparray_coordinates, Visualization_arr
+# from Visualization_result_matplot import Visualization_nparray_coordinates, Visualization_arr
 from utilities import getMTL
 
 def time(a, b):
@@ -29,7 +29,7 @@ def length(a1,b1,a2,b2):
     l_a = abs((a2_r - a1_r))/2
     l_b = abs((b2_r - b1_r))/2
     x = 2*math.asin( (math.sin(l_a)**2 + math.cos(a1_r)*math.cos(a2_r) * math.sin(l_b)**2 ) **0.5 )
-    length = (x*r) # в м
+    length = (x*r)/1000 # в км
     return length
 
 def Minimum_Len_array(arr1, arr2):
@@ -63,30 +63,30 @@ def Lists_coordinates(np_folder, info):
 def Minimum_distance(GT_coord, Test_sample_coord, k):
     
     arr_minimum_d = []    
-    arr_minimum_m = []
+    arr_minimum_km = []
 
     for i in range(len(GT_coord)):
         arr_degrees = []
-        arr_m = []
+        arr_km = []
         for j in range(len(Test_sample_coord)):
             
             diff_lat = abs(GT_coord[i][0] - Test_sample_coord[j][0])
             diff_lon = abs(GT_coord[i][1] - Test_sample_coord[j][1])
             
             diff_degrees = (diff_lat**2 + diff_lon**2)**0.5
-            diff_m = length(GT_coord[i][0], GT_coord[i][1], Test_sample_coord[j][0], Test_sample_coord[j][1])
+            diff_km = length(GT_coord[i][0], GT_coord[i][1], Test_sample_coord[j][0], Test_sample_coord[j][1])
             
             arr_degrees.append(diff_degrees)
-            arr_m.append(diff_m)
+            arr_km.append(diff_km)
             
         arr_minimum_d.append(min(arr_degrees))
-        arr_minimum_m.append(min(arr_m))
+        arr_minimum_km.append(min(arr_km))
         
         
     arr_minimum_d = sorted(arr_minimum_d)
-    arr_minimum_m = sorted(arr_minimum_m)
+    arr_minimum_km = sorted(arr_minimum_km)
 
-    return (arr_minimum_d[k-1], arr_minimum_m[k-1])
+    return (arr_minimum_d[k-1], arr_minimum_km[k-1])
 
     
 def Dist_GT_test(GT_coord, Test_sample_coord):
@@ -165,7 +165,7 @@ def Сalculation_E_diff_corners(filepath, np_filepath, info):
     p_lon = abs((Max_lon - Min_lon)/(Max_ind_col - offsetX))
     
     E_diff = (p_lat**2 + p_lon**2)**0.5
-    return  E_diff
+    return (p_lat, p_lon)
 
 def Сalculation_E_diff_compare_coordinates(GT_coord, Test_sample_coord):
     
@@ -190,6 +190,28 @@ def Сalculation_E_diff_compare_coordinates(GT_coord, Test_sample_coord):
             
             Gr3.append((GT_coord[i][0], GT_coord[i][1]))
             
+    return Gr3
+
+
+
+def compare_coordinates_lists_2(GT_coord, Test_sample_coord, E_diff):
+    
+    Gr3 = []    
+    for i in range(len(GT_coord)):
+        arr = []
+        for j in range(len(Test_sample_coord)):
+            
+            diff = length(GT_coord[i][0], GT_coord[i][1], Test_sample_coord[j][0], Test_sample_coord[j][1])
+            arr.append((diff, Test_sample_coord[j][0], Test_sample_coord[j][1]))
+            
+        arr_sort = sorted(arr, key = lambda x: x[0])
+
+        print(arr_sort[0][0],'км    ', arr_sort[0][1], arr_sort[0][2])  
+        
+        if arr_sort[0][0] <= E_diff:
+            Gr3.append((GT_coord[i][0], GT_coord[i][1]))
+        
+
     return Gr3
 
 def compare_coordinates_lists(GT_coord, Test_sample_coord, E_diff):

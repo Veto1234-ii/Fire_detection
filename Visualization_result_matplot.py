@@ -52,7 +52,7 @@ def Visualization_arr(arr, info, color):
     plt.title(info)
     plt.show()
 
-Visualization_nparray_coordinates('result/','20131229', 'red')
+Visualization_nparray_coordinates('result/','176022_20181020_20181031', 'red')
 # 188034_20140623_20170421
 # 188034_20140522_20180527
 # 188034_20140215_20170425
