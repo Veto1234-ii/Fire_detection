@@ -206,7 +206,7 @@ def compare_coordinates_lists_2(GT_coord, Test_sample_coord, E_diff):
             
         arr_sort = sorted(arr, key = lambda x: x[0])
 
-        print(arr_sort[0][0],'км    ', arr_sort[0][1], arr_sort[0][2])  
+        # print(arr_sort[0][0],'км    ', arr_sort[0][1], arr_sort[0][2])  
         
         if arr_sort[0][0] <= E_diff:
             Gr3.append((GT_coord[i][0], GT_coord[i][1]))
