@@ -4,10 +4,10 @@ import math
 import gc
 from utilities import getMTL
 
-def DNtoReflectance(filepath, info, n_band, resultfolder):
+def DNtoReflectance(filepath, info, n_band, mtl):
     num_band = str(n_band)
-    band = filepath + '_01_T1_B' + num_band +'.tif'
-    mtl  = filepath + '_01_T1_MTL.txt'
+    band = filepath + r'\LC08_L1TP_'+info+'_01_T1\LC08_L1TP_'+info+ '_01_T1_B' + num_band +'.tif'
+    
 
     data = getMTL(mtl)
 
@@ -25,7 +25,7 @@ def DNtoReflectance(filepath, info, n_band, resultfolder):
     print(np.min(Reflectance), ' Min Value Band '+ num_band)
     
     b = np.array(Reflectance,dtype = np.float32)
-    np.save(resultfolder + 'Landsat_'+ info +'_B' + num_band, b)
+    np.save(filepath + r"/result/" + 'Landsat_'+ info +'_B' + num_band, b)
     Reflectance = None
     b = None
     gc.collect()

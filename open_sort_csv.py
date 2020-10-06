@@ -10,18 +10,6 @@ from utilities import getMTL
 import datetime
 from comparison import *
 
-X = '026048_20140507_20170306'
-
-filepath = r'F:\Gis\LC08_L1TP_'+X+'_01_T1\Image\LC08_L1TP_'+X
-np_filepath = r'result/'
-
-mtl = filepath + '_01_T1_MTL.txt'
-
-# FIRMS = np_filepath + r'fire_archive_M6_120741.csv'
-FIRMS = np_filepath + r'fire_archive_M6_120507.csv'
-
-
-E_diff = 1# км
 
 def Max_Min_Lat_Lon(mtl):
     data =  getMTL(mtl)
@@ -62,33 +50,21 @@ def FIRMS_coordinates(FIRMS, mtl, info):
     z_lon  = (df.longitude >=  Min_lon) & (df.longitude <= Max_lon)
     z_coor = z_lat & z_lon
     
+    
+    
     date = str(datetime.date(int(info[7:11]),int(info[11:13]),int(info[13:15])))
-    print()
-    print(date)
-    print()
-    df_sort = df[(df.acq_date == date) & (df.daynight == 'D') & z_coor][['latitude', 'longitude','acq_date']]
-    print(df_sort)
-    print()
-    arr_lat = np.array(df_sort['latitude'])
-    arr_lon = np.array(df_sort['longitude'])
+    
+    df_sort = df[(df.acq_date == date) & (df.daynight == 'D') & z_coor][['latitude', 'longitude','acq_date','confidence']]
+
+
+    arr_lat  = np.array(df_sort['latitude'])
+    arr_lon  = np.array(df_sort['longitude'])
+    arr_conf = np.array(df_sort['confidence'])
     arr = []
-       
+
     for i in range(arr_lat.shape[0]):
-        arr.append((arr_lat[i], arr_lon[i]))
-            
+        arr.append((arr_lat[i], arr_lon[i], arr_conf[i]))
+        
+    
+    
     return arr
-
-GR = FIRMS_coordinates(FIRMS, mtl, X)
-Test = Lists_coordinates(np_filepath, X)
-
-
-func = Сalculation_E_diff_corners(filepath, np_filepath, X)
-p_lat = func[0]/30*1000
-p_lon = func[1]/30*1000
-
-print(p_lat,'degrees of latitude in 1 kilometer')
-print(p_lon,'degrees of longitude in 1 kilometer')
-print()
-
-res = compare_coordinates_lists_2(GR, Test, E_diff)
-print(res, 'Result')

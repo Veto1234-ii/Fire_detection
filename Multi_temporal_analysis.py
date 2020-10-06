@@ -17,26 +17,21 @@ def Print_Dict(d):
         # print(key,value[2],' days')
         print(key,value[1],' points')
         
-def time(a, b):
-    date1 = datetime.date(int(a[0:4]),int(a[4:6]),int(a[6:]))
-    date2 = datetime.date(int(b[0:4]),int(b[4:6]),int(b[6:]))
-    days = abs(int(str(date1-date2).split()[0]))
-    return days
 
 def Analysis(np_folder, Names_images, E_diff): 
     
     d2 ={}
-    for i in range(len(Names_images)-1):
-        arr1 = Lists_coordinates(np_folder, Names_images[i])
+    arr_coordinates = []
+    for i in range(len(Names_images)):
+        arr_coordinates.append(Lists_coordinates(np_folder, Names_images[i]))
         
-        for j in range(i+1, len(Names_images)):
+    for i in range(len(arr_coordinates)-1):
+        for j in range(i+1, len(arr_coordinates)):
             
-            arr2 = Lists_coordinates(np_folder, Names_images[j])
-            res = compare_coordinates_lists_2(arr1, arr2, E_diff)
-            Time = time(Names_images[i], Names_images[j])
+            res = compare_coordinates_lists_2(arr_coordinates[i], arr_coordinates[j], E_diff)
             
             if len(res)!=0:
-                d2[(Names_images[i],Names_images[j])] = (res, len(res), Time)
+                d2[(Names_images[i],Names_images[j])] = (res, len(res))
     return d2
 
 def comparison_comparison(d2, Names_images, E_diff):
@@ -115,7 +110,7 @@ def FromCoordinatesToValue_b7(filepath, np_folder, info, lat, lon):
     LR_LAT = float(data['CORNER_LR_LAT_PRODUCT'])
     LR_LON = float(data['CORNER_LR_LON_PRODUCT'])
     
-    Corners      = index_corners(b1)
+    Corners      = index_corners(b7)
 #  (Max_ind_line, Min_ind_line, Max_ind_col, Min_ind_col)
     
     Max_ind_line = Corners[0]
@@ -144,11 +139,11 @@ result = coor_p[1]
 dist   = coor_p[2]    
 images = coor_p[3]
 
-print(points)        
+# print(points)        
 print()
 # print(dist)
 print()
 print(result)
 
 print()
-print(images)
+# print(images)
