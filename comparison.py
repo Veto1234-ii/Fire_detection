@@ -49,8 +49,8 @@ def To_radians(x):
 
 def Lists_coordinates(np_folder, info):
     
-    arr_lat = np.load(np_folder + r'latarr_'+info+'.npy')
-    arr_lon = np.load(np_folder + r'lonarr_'+info+'.npy')
+    arr_lat = np.load(np_folder + r'\latarr_'+info+'.npy')
+    arr_lon = np.load(np_folder + r'\lonarr_'+info+'.npy')
     
     arr = []
    

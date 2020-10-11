@@ -12,23 +12,25 @@ from comparison import *
 from open_sort_csv import FIRMS_coordinates
 
 
-def Main(X, filepath, FIRMS, mtl):
+def Main(X, filepath, FIRMS, mtl, path_res):
     
     E_diff = 1 # 1 km
     
     
-    firemask = filepath + r"/result/" + 'fire_mask_'+X+'.npy'
+    firemask = path_res + r'\fire_mask_'+X+'.npy'
     
     for i in range(1,8):
-        DNtoReflectance(filepath, X, i, mtl)
+        DNtoReflectance(filepath, X, i, mtl, path_res)
      
-    k_alg = detectFire(filepath, X)
-    FromMaskToCoords(filepath, X, firemask, mtl)
+    k_alg = detectFire(path_res, X)
+    FromMaskToCoords(path_res, X, firemask, mtl)
     
+    # lat = np.load(path_res + r'\latarr_'+X+'.npy')
+    # k_alg = lat.shape[0]
 
     
-    GT   = FIRMS_coordinates(filepath + r"/result/" + FIRMS, mtl, X)
-    Test = Lists_coordinates(filepath + r"/result/", X)
+    GT   = FIRMS_coordinates(path_res + FIRMS, mtl, X)
+    Test = Lists_coordinates(path_res, X)
     
     Points_match = compare_coordinates_lists_2(GT, Test, E_diff)
      

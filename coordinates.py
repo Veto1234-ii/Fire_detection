@@ -40,8 +40,8 @@ def Coordinates(i, j, Min_lat, Max_Lat, Min_lon, Max_lon, Max_ind_line, Min_ind_
 
     return (res_lat1,res_lon)
 
-def FromMaskToCoords(filepath, info, firemask, mtl):
-    b1 = np.load(filepath + r"/result/" + r'Landsat_' + info + '_B1.npy')
+def FromMaskToCoords(path_res, info, firemask, mtl):
+    b1 = np.load(path_res + r'\Landsat_' + info + '_B1.npy')
     data = getMTL(mtl)
 
     UL_LAT = float(data['CORNER_UL_LAT_PRODUCT'])
@@ -85,6 +85,6 @@ def FromMaskToCoords(filepath, info, firemask, mtl):
     latarr=np.array(latarr)
 
     print(len(lonarr))
-    np.save(filepath + r"/result/" + 'lonarr_'+info,lonarr)
-    np.save(filepath + r"/result/" + 'latarr_'+info,latarr)
+    np.save(path_res + r'\lonarr_'+info,lonarr)
+    np.save(path_res + r'\latarr_'+info,latarr)
     print('coords done')

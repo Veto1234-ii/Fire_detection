@@ -9,12 +9,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Layer import Layer
 
-def detectFire(filepath, info):
+def detectFire(path_res, info):
 
-    b_1s = np.load(filepath + r"/result/"  + r'Landsat_'+info+'_B1.npy')
-    b_2s = np.load(filepath + r"/result/"  + r'Landsat_'+info+'_B2.npy')
-    b_3s = np.load(filepath + r"/result/"  + r'Landsat_'+info+'_B3.npy')
-    b_4s = np.load(filepath + r"/result/"  + r'Landsat_'+info+'_B4.npy')
+    b_1s = np.load(path_res  + r'\Landsat_'+info+'_B1.npy')
+    b_2s = np.load(path_res  + r'\Landsat_'+info+'_B2.npy')
+    b_3s = np.load(path_res  + r'\Landsat_'+info+'_B3.npy')
+    b_4s = np.load(path_res  + r'\Landsat_'+info+'_B4.npy')
     
     shape = b_1s.shape
 
@@ -31,9 +31,9 @@ def detectFire(filepath, info):
     L2     = None
     gc.collect()
     
-    b_5s = np.load(filepath + r"/result/" + r'Landsat_'+info+'_B5.npy')
-    b_6s = np.load(filepath + r"/result/" + r'Landsat_'+info+'_B6.npy')
-    b_7s = np.load(filepath + r"/result/" + r'Landsat_'+info+'_B7.npy')
+    b_5s = np.load(path_res + r'\Landsat_'+info+'_B5.npy')
+    b_6s = np.load(path_res + r'\Landsat_'+info+'_B6.npy')
+    b_7s = np.load(path_res + r'\Landsat_'+info+'_B7.npy')
     L5 = Layer(b_5s)
     L6 = Layer(b_6s)
     L7 = Layer(b_7s)
@@ -130,7 +130,7 @@ def detectFire(filepath, info):
     #===============================================================================
     plt.title("result")
     plt.imshow(result,cmap='gray')
-    np.save(filepath + r"/result/" + 'fire_mask_'+info, result)
+    np.save(path_res + r'\fire_mask_'+info, result)
     mask = np.zeros(shape, dtype = np.uint8)
     np.putmask(mask,result!=0, 1)
     k = np.sum(mask)
