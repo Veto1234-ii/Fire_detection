@@ -1,5 +1,5 @@
 from Main import Main
-
+import os
 
 def Loading_processing(filepath, X_arr, FIRMS, nameFile, path_res):
 
@@ -24,12 +24,13 @@ def Loading_processing(filepath, X_arr, FIRMS, nameFile, path_res):
         
     file.close()    
         
-X_arr = ['144015_20190703_20190718', '144015_20190719_20190731', '144015_20190804_20190820', '144015_20190820_20190902']
-# '134018_20140528_20170422' '134018_20140715_20170421', '134018_20140731_20170420', '134018_20140816_20170420'
 
-FIRMS = r'\fire_archive_M6_120507.csv'
+FIRMS = r'\fire_archive_M6_120741.csv'
 nameFile = 'Snapshot'
-filepath = r'F:\Gis\Snapshots'
-path_res = r'F:\Gis\Snapshots\result'
+filepath = r'D:\VETOSHNIKOVA\Snapshots'
+path_res = filepath + r'\result'
+
+list_files = os.listdir('D:\VETOSHNIKOVA\Snapshots')
+X_arr = [list_files[i][10:34] for i in range(len(list_files) - 1)]
 Loading_processing(filepath, X_arr, FIRMS, nameFile, path_res)
     
