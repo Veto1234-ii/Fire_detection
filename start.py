@@ -6,6 +6,7 @@ def Loading_processing(filepath, X_arr, FIRMS, nameFile, path_res):
     file = open(filepath + r"/result/" + nameFile + '.txt','w')
     file.write('Snapshot, Fire algorithm output pixels, Points coincided with firms, unsure, medium confident, confident')
     
+    
     for i in range(len(X_arr)):
         
         mtl = filepath + '\LC08_L1TP_'+X_arr[i]+'_01_T1\LC08_L1TP_'+X_arr[i]+ '_01_T1_MTL.txt'
@@ -25,12 +26,14 @@ def Loading_processing(filepath, X_arr, FIRMS, nameFile, path_res):
     file.close()    
         
 
-FIRMS = r'\fire_archive_M6_120741.csv'
-nameFile = 'Snapshot'
-filepath = r'D:\VETOSHNIKOVA\Snapshots'
+FIRMS = r'\fire_archive_V1_162088.csv'
+nameFile = 'Snapshot_134018'
+filepath = r'F:\Gis\Snapshots'
+
+
 path_res = filepath + r'\result'
 
-list_files = os.listdir('D:\VETOSHNIKOVA\Snapshots')
+list_files = os.listdir(filepath)
 X_arr = [list_files[i][10:34] for i in range(len(list_files) - 1)]
 Loading_processing(filepath, X_arr, FIRMS, nameFile, path_res)
     

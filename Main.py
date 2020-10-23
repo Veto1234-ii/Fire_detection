@@ -10,7 +10,7 @@ from Algorithm import detectFire
 from coordinates import FromMaskToCoords
 from comparison import *
 from open_sort_csv import FIRMS_coordinates
-
+from Mask_Image_points import  Save_mask_image_points
 
 def Main(X, filepath, FIRMS, mtl, path_res):
     
@@ -36,8 +36,9 @@ def Main(X, filepath, FIRMS, mtl, path_res):
      
     k_unsure, k_med_conf, k_conf = Grouping_points_confident(Points_match, 40, 60)
     
-    Points = k_unsure + k_med_conf + k_conf
+    Points = len(Points_match)
     
+    Save_mask_image_points(firemask, X, path_res)
     
     return k_alg, Points, k_unsure, k_med_conf, k_conf
     

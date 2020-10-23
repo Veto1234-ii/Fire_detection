@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 # from Visualization_result_matplot import Visualization_nparray_coordinates, Visualization_arr
 from utilities import getMTL
 
+
 def time(a, b):
     date1 = datetime.date(int(a[0:4]),int(a[4:6]),int(a[6:]))
     date2 = datetime.date(int(b[0:4]),int(b[4:6]),int(b[6:]))
@@ -226,6 +227,20 @@ def Grouping_points_confident(arr, g1, g2):
             k_conf+=1
           
     return k_unsure, k_med_conf, k_conf
+
+def Grouping_points_confident_VIIRS(arr):
+    h = 0
+    l = 0
+    n = 0
+    for i in range(len(arr)):
+        if str(arr[i][2]) == 'h':
+            h+=1
+        if str(arr[i][2]) == 'l':
+            l+=1
+        if str(arr[i][2]) == 'n':
+            n+=1
+          
+    return h, l, n
     
 
 def compare_coordinates_lists(GT_coord, Test_coord, E_diff):
