@@ -4,7 +4,7 @@ Created on Thu Jun 25 08:32:26 2020
 
 @author: Alexandra
 """
-
+import numpy as np
 class Layer(object):
     """One layer of HIS image"""
     
@@ -36,7 +36,7 @@ class Layer(object):
     
     # def __gt__(self,other):
     #     return Layer(self.arr > other)
-    def __gt__(self,other):
+    def __rshift__(self,other):
         if isinstance(other, self.__class__):
             return Layer(self.arr > other.arr)
         
@@ -45,7 +45,7 @@ class Layer(object):
 
     # def __lt__(self, other):
     #     return Layer(self.arr < other)
-    def __lt__(self, other):
+    def __lshift__(self, other):
         if isinstance(other, self.__class__):
             return Layer(self.arr < other.arr)
         

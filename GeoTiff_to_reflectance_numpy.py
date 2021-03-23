@@ -1,22 +1,35 @@
 import numpy as np
 import tifffile
+import math
+import gc
+from utilities import getMTL
 
 def DNtoReflectance(filepath, info, n_band, resultfolder):
-    band = filepath + '_01_T1_B' + str(n_band) +'.tif'
+    num_band = str(n_band)
+    band = filepath + '_01_T1_B' + num_band +'.tif'
     mtl  = filepath + '_01_T1_MTL.txt'
-    
-    data={}
-    with open(mtl) as file:
-        for line in file:
-            key, *value = line.split()
-            data[key] = value
-             
+
+    data = getMTL(mtl)
+
+    SUN_ELEVATION      = float(data['SUN_ELEVATION'])
+    SUN_ELEVATION_Rad  = SUN_ELEVATION * math.pi/180
+    EARTH_SUN_DISTANCE = float(data['EARTH_SUN_DISTANCE'])
+
     image = tifffile.imread(band, key=0)
-    arr = np.array(image)
-    Mult = float(data['REFLECTANCE_MULT_BAND_' + str(n_band)][1])
-    Add =  float(data['REFLECTANCE_ADD_BAND_'  + str(n_band)][1])
-    arr_reflectance = arr*Mult + Add
-    b = np.array(arr_reflectance, dtype = np.float32)
-    np.save(resultfolder + 'Landsat_'+ info +'_B' + str(n_band), b)
-    print("save "+ 'Landsat_'+ info +'_B' + str(n_band))
-    
+    DN = np.array(image)
+
+    RADIANCE_MAXIMUM_BAND =    float(data['RADIANCE_MAXIMUM_BAND_'    + num_band])
+    REFLECTANCE_MAXIMUM_BAND = float(data['REFLECTANCE_MAXIMUM_BAND_' + num_band])
+    RADIANCE_MULT_BAND =       float(data['RADIANCE_MULT_BAND_'       + num_band])
+    RADIANCE_ADD_BAND =        float(data['RADIANCE_ADD_BAND_'        + num_band])
+
+    Radiance = DN * RADIANCE_MULT_BAND + RADIANCE_ADD_BAND
+    Sun_radiance = ((math.pi*EARTH_SUN_DISTANCE**2)**2*RADIANCE_MAXIMUM_BAND*np.sin(SUN_ELEVATION_Rad))/REFLECTANCE_MAXIMUM_BAND
+    Reflectance = Radiance/Sun_radiance
+
+    b = np.array(Reflectance,dtype = np.float32)
+    np.save(resultfolder + 'Landsat_'+ info +'_B' + num_band, b)
+    Reflectance = None
+    b = None
+    gc.collect()
+    print("save "+ 'Landsat_'+ info +'_B' + num_band)

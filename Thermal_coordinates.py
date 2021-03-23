@@ -1,5 +1,4 @@
 import numpy as np
-from utilities import getMTL
 
 def index_corners(b):
     shape = b.shape
@@ -26,13 +25,12 @@ def index_corners(b):
 
 def Coordinates(i, j, Min_lat, Max_Lat, Min_lon, Max_lon, Max_ind_line, Min_ind_line, Max_ind_col, Min_ind_col):
 
+
     offsetX = Min_ind_col
     offsetY = Min_ind_line
 
     p_lat = abs((Max_Lat - Min_lat)/(Max_ind_line - offsetY))
-    print(p_lat)
     p_lon = abs((Max_lon - Min_lon)/(Max_ind_col - offsetX))
-    print(p_lon)
 
     res_lat1 = Max_Lat - (i - offsetY) * p_lat
 
@@ -40,18 +38,23 @@ def Coordinates(i, j, Min_lat, Max_Lat, Min_lon, Max_lon, Max_ind_line, Min_ind_
 
     return (res_lat1,res_lon)
 
-def FromMaskToCoords(path_res, info, firemask, mtl):
-    b1 = np.load(path_res + r'\Landsat_' + info + '_B1.npy')
-    data = getMTL(mtl)
+def FromMaskToCoords(filepath, np_filepath, info, n_band, firemask):
+    b1 = np.load(np_filepath + r'Landsat_' + info + '_B1.npy')
+    mtl  = filepath + '_01_T1_MTL.txt'
+    data={}
+    with open(mtl) as file:
+        for line in file:
+            key, *value = line.split()
+            data[key] = value
 
-    UL_LAT = float(data['CORNER_UL_LAT_PRODUCT'])
-    UL_LON = float(data['CORNER_UL_LON_PRODUCT'])
-    UR_LAT = float(data['CORNER_UR_LAT_PRODUCT'])
-    UR_LON = float(data['CORNER_UR_LON_PRODUCT'])
-    LL_LAT = float(data['CORNER_LL_LAT_PRODUCT'])
-    LL_LON = float(data['CORNER_LL_LON_PRODUCT'])
-    LR_LAT = float(data['CORNER_LR_LAT_PRODUCT'])
-    LR_LON = float(data['CORNER_LR_LON_PRODUCT'])
+    UL_LAT = float(data['CORNER_UL_LAT_PRODUCT'][1])
+    UL_LON = float(data['CORNER_UL_LON_PRODUCT'][1])
+    UR_LAT = float(data['CORNER_UR_LAT_PRODUCT'][1])
+    UR_LON = float(data['CORNER_UR_LON_PRODUCT'][1])
+    LL_LAT = float(data['CORNER_LL_LAT_PRODUCT'][1])
+    LL_LON = float(data['CORNER_LL_LON_PRODUCT'][1])
+    LR_LAT = float(data['CORNER_LR_LAT_PRODUCT'][1])
+    LR_LON = float(data['CORNER_LR_LON_PRODUCT'][1])
     
     Corners = index_corners(b1)
     Max_ind_line = Corners[0]
@@ -85,6 +88,6 @@ def FromMaskToCoords(path_res, info, firemask, mtl):
     latarr=np.array(latarr)
 
     print(len(lonarr))
-    np.save(path_res + r'\lonarr_'+info,lonarr)
-    np.save(path_res + r'\latarr_'+info,latarr)
+    np.save(np_filepath + 'lonarr_Temperature_Band_'+str(n_band)+'_'+info,lonarr)
+    np.save(np_filepath + 'latarr_Temperature_Band_'+str(n_band)+'_'+info,latarr)
     print('coords done')

@@ -1,19 +1,9 @@
 import numpy as np
 
-def calculateBorders(filepath, np_filepath, info, resultpath, border_width = 40):
-   
+def calculateBorders( np_filepath, info, resultpath, border_width = 40):
     b1 = np.load(np_filepath + r'Landsat_' + info + '_B1.npy')
-    mtl  = filepath + '_01_T1_MTL.txt'
     
-    data={}
-    
-    with open(mtl) as file:
-        for line in file:
-            key, *value = line.split()
-            data[key] = value
-     
-    min_val = float(data['REFLECTANCE_ADD_BAND_1'][1])       
-    
+    min_val = b1[0][0] 
     shape = b1.shape
     res1 = np.full(shape, False, dtype=bool)
     np.putmask(res1, b1 != min_val , True)
@@ -29,3 +19,6 @@ def calculateBorders(filepath, np_filepath, info, resultpath, border_width = 40)
                           
     np.save(resultpath + 'clip_'+ info, result)
     print("borders done" + str(np.sum(result)))
+
+
+
